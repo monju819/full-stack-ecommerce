@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
+import axios from "axios";
+
 const Registration = () => {
   const [state, setState] = useState({
     name: "",
@@ -19,6 +21,19 @@ const Registration = () => {
   const submit = (e) => {
     e.preventDefault();
     console.log(state);
+    axios.post(
+      "http://localhost:8000/api/v1/auth/registration",
+      {
+        name: state.name,
+        email: state.email,
+        password: state.password,
+      },
+      {
+        headers: {
+          Authorization: "hdfhjjjgjirjgiopweirigvmfjnfj",
+        },
+      }
+    );
   };
 
   return (
@@ -70,7 +85,7 @@ const Registration = () => {
               />
             </div>
 
-            <div className="flex items-center w-full gap-3 mb-3">
+            {/* <div className="flex items-center w-full gap-3 mb-3">
               <input
                 className="w-4 h-4 text-blue-600 overflow-hidden bg-gray-200 rounded border-gray-300 focus:ring-blue-500"
                 type="checkbox"
@@ -80,7 +95,7 @@ const Registration = () => {
               <label htmlFor="checkbox">
                 I agree to privacy policy & treams
               </label>
-            </div>
+            </div> */}
             <button className="bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3 ">
               Sign up
             </button>
