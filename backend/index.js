@@ -4,6 +4,10 @@ const cors = require("cors");
 
 const routes = require("./routes");
 const app = express(); // Initialize Express app first
+const mongoConfig = require("./config/mongoConfig");
+
+mongoConfig();
+
 app.use(cors()); // Apply CORS middleware
 app.use(express.json());
 app.use(routes); // index routes ta backend index er sathe add korlam
