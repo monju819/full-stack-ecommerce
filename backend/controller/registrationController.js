@@ -1,20 +1,47 @@
-let registrationController = (req, res) => {
+const blankInput = require("../helpers/blankInput");
+const emailValidator = require("../helpers/emailValidator");
+const passwordValidator = require("../helpers/passwordValidator");
+const User = require("../model/userModel");
+const bcrypt = require("bcrypt");
+let registrationController = async (req, res) => {
   // Extract data from the request body
   const { username, email, password } = req.body;
 
-  // Validate input data (e.g., check if required fields are present, validate email format, etc.)
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: "Missing required fields" });
+  if (blankInput(username)) {
+    res.send({ error: "username required" });
+  } else if (blankInput(email)) {
+    res.send({ error: "email required" });
+  } else if (!emailValidator(email)) {
+    res.send({ error: " valid email required" });
+  } else if (blankInput(password)) {
+    res.send({ error: "password required" });
+  } else if (passwordValidator(password)) {
+    res.send({ error: "password is sort" });
+  } else {
+    let existingEmail = await User.find({
+      email: email,
+    });
+    console.log(existingEmail);
+    if (existingEmail.length > 0) {
+      res.send({ error: `${email} already exists` });
+    } else {
+      bcrypt.hash(password, 10, function (err, hash) {
+        let user = new User({
+          username: username,
+          email: email,
+          password: hash,
+        });
+        user.save();
+        res.send({
+          username: user.username,
+          email: user.email,
+          role: user.role,
+        });
+      });
+    }
   }
 
-  // TODO: Perform additional validation (e.g., check if username or email is already taken)
-
-  // TODO: Create a new user record in the database with the provided data
-
-  // TODO: Send confirmation email to the user (optional)
-
-  // Respond with a success message
-  res.status(200).json({ message: "Registration successful" });
+  // Validate input data (e.g., check if required fields are present, validate email format, etc.)
 };
 
 module.exports = registrationController;
