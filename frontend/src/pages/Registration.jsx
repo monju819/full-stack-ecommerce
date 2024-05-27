@@ -6,7 +6,7 @@ import axios from "axios";
 
 const Registration = () => {
   const [state, setState] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -18,22 +18,28 @@ const Registration = () => {
     });
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     console.log(state);
-    axios.post(
-      "http://localhost:8000/api/v1/auth/registration",
-      {
-        name: state.name,
-        email: state.email,
-        password: state.password,
-      },
-      {
-        headers: {
-          Authorization: "hdfhjjjgjirjgiopweirigvmfjnfj",
+    try {
+      let data = await axios.post(
+        "http://localhost:8000/api/v1/auth/registration",
+        {
+          username: state.username,
+          email: state.email,
+          password: state.password,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: "hdfhjjjgjirjgiopweirigvmfjnfj",
+          },
+        }
+      );
+      console.log(data);
+    } catch (error) {
+      console.error("Registration failed:", error);
+      alert("Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -49,12 +55,12 @@ const Registration = () => {
               <label htmlFor="name">Name</label>
               <input
                 onChange={inputHandle}
-                value={state.name}
+                value={state.username}
                 className="px-3 py-2 outline-none border border-slate-700 bg-transparent rounded-md"
                 type="text"
-                name="name"
+                name="username"
                 placeholder="name"
-                id="name"
+                id="username"
                 required
               />
             </div>
