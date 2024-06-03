@@ -13,10 +13,13 @@ let otpverificationController = async (req, res) => {
   let findEmail = await User.findOne({ email: email });
   console.log(findEmail);
   if (findEmail) {
-    console.log(findEmail.otp);
-    console.log(otp);
-    if (findEmail.otp == otp) {
-      await User.findOneAndUpdate({ email: email }, { otp: "" });
+    // console.log(findEmail.otp);
+    // console.log(otp);
+    if (!findEmail.isEmailVarified && findEmail.otp == otp) {
+      await User.findOneAndUpdate(
+        { email: email },
+        { otp: "", isEmailVarified: true }
+      );
       res.send({ success: "otp successfully match" });
     } else {
       res.send({ error: "otp does't match" });
